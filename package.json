@@ -1,0 +1,25 @@
+{
+  "name": "aws_serverless_dynamodb_crud",
+  "version": "1.0.0",
+  "description": "this is develop using AWS, Serverless Framework with costomized library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jepoycerujano/AWS_Serverless_DynamoDb_CRUD.git"
+  },
+  "keywords": [
+    "AWS",
+    "Serverless",
+    "DynamoDb",
+    "CRUD"
+  ],
+  "author": "jefferson caoile cerujano",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jepoycerujano/AWS_Serverless_DynamoDb_CRUD/issues"
+  },
+  "homepage": "https://github.com/jepoycerujano/AWS_Serverless_DynamoDb_CRUD#readme"
+}
