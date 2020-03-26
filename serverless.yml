@@ -1,0 +1,107 @@
+service: workflow-master
+
+frameworkVersion: ">=1.0.0 <2.0.0"
+
+plugins:
+  - serverless-dynamodb-local # for developers
+  - serverless-offline # for developers
+  - serverless-latest-layer-version # for developers
+  - serverless-pseudo-parameters # for developers
+
+custom:
+  domains:
+    stage: '${self:provider.stage}-${self:service}.nipahut.net'
+  customDomain:
+    domainName: '${self:provider.stage}-${self:service}.nipahut.net'
+    stage: '${self:provider.stage}'
+    basePath: '${self:provider.stage}'
+    certificateName: 'nipahut.net'
+    createRoute53Record: false
+    endpointType: 'edge'
+
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      migrate: true
+      inMemory: true
+      onStart: true
+
+package:
+  exclude:
+    - "**/node_modules/**"  # all node_modules folder
+    - "**/*.test.*"  # all test files
+    - ".dynamodb/**"
+    - ".serverless/**"
+
+provider:
+  name: aws
+  runtime: nodejs12.x # node package version
+  stage: ${opt:stage, 'dev'} # default invironment set to (dev = "development stage")
+  region: ${opt:region, 'us-east-1'} # region where it will be deploy
+  deploymentBucket:
+    name: deploy.${self:provider.region}.nipahut.net # S3 bucket name
+  environment:
+    DEPLOYMENT_STAGE: ${self:provider.stage}
+    WORKFLOW_ACTOR_TABLE: workflow_actor-${self:provider.stage} # actors table service
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource:
+        - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.WORKFLOW_ACTOR_TABLE}
+
+resources:
+  Resources:
+    WorkflowActor: # workflow actors table
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.WORKFLOW_ACTOR_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+functions:
+# CRUD for Workflow Actor 
+# Create, Read, Update and Delete function
+  createActor:
+    description: create actor
+    handler: handler.createActor
+    layers:
+      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
+
+  getActor:
+    description: get actor
+    handler: handler.getActor
+    layers:
+      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
+    
+  updateActor:
+    description: update actor
+    handler: handler.updateActor
+    layers:
+      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
+    
+  deleteActor:
+    description: delete actor
+    handler: handler.deleteActor
+    layers:
+      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
+
+  getMultiActor:
+    description: get one or multiple actors
+    handler: handler.getMultiActor
+    layers:
+      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
