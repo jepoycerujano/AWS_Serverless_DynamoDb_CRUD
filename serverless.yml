@@ -1,4 +1,4 @@
-service: actor-workflow-service
+service: aws-serverles-crud
 
 frameworkVersion: ">=1.0.0 <2.0.0"
 
@@ -30,7 +30,7 @@ custom:
 
 package:
   exclude:
-    - "**/node_modules/**"  # all node_modules folder
+    # - "**/node_modules/**"  # all node_modules folder
     - "**/*.test.*"  # all test files
     - ".dynamodb/**"
     - ".serverless/**"

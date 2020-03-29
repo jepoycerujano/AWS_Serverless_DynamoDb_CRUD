@@ -1,8 +1,8 @@
-# workflow master
+# aws-serverles-crud
 
 ### What is this repository for? ###
 
-* Microservice for  workflow master
+* this is to performed basic CRUD functions
 
 ### How do I get set up? ###
 
@@ -13,59 +13,7 @@
 npm install -g serverless # optional in case you have it already
 npm install
 sls dynamodb install
-# run (see package.json > scripts)
-npm start
+# run the service in your local
+npm run startwin
 ```
-
-* How to run tests
-```
-npm run test
-```
-* Deployment instructions
-  * no docs yet
-  
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
-
-# TODO
-* Create TODO
-```json
-{
-"templateName": "",
-"templateData": "",
-"execution_name": "",
-"taskToken": "",
-"owner": [""], // approver of task
-}
-```
-# Workflow_Actors
-* Create/Update Workflow Actors
-    - NOTE: number of approver/actors will depend on process. Naming convertions for actors is base on rule description and should be in CamelCase and no space. It will send resonse 
-```json
-{
-    "actor": "", // actor should be unique and serve as ID.
-    "email": [""], // array of valid email
-}
-```
-- Example:
-```json
-{
-    "actor": "finance_validator_corp",
-    "email": ["juan_delacruz@seaoil.com.ph", "james_rizal@seaaoil.com.ph"],
-}
-```
-* Read/Delete Workflow Actors
-    - get/update/delete actors email will need actors name parameters.
-```json
-{
-    "actors": "finance_validator_cor"
-}
-```
+open Postman, import myPostman.json and Run
