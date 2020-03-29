@@ -1,4 +1,4 @@
-service: workflow-master
+service: actor-workflow-service
 
 frameworkVersion: ">=1.0.0 <2.0.0"
 
@@ -34,6 +34,13 @@ package:
     - "**/*.test.*"  # all test files
     - ".dynamodb/**"
     - ".serverless/**"
+  include:
+    - src/module/actor/createActor.js
+    - src/module/actor/createActor.js
+    - src/module/actor/createActor.js
+    - src/module/actor/createActor.js
+    - src/module/actor/createActor.js
+    - src/module/actor/createActor.js
 
 provider:
   name: aws
@@ -78,30 +85,45 @@ functions:
 # Create, Read, Update and Delete function
   createActor:
     description: create actor
-    handler: handler.createActor
-    layers:
-      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
+    handler: src/module/actor/createActor.handler
+    events:
+      - http:
+          path: /create
+          method: post
+          cors: true
 
   getActor:
     description: get actor
-    handler: handler.getActor
-    layers:
-      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
-    
+    handler: src/module/actor/getActor.handler
+    events:
+      - http:
+          path: /get
+          method: post
+          cors: true
+
   updateActor:
     description: update actor
-    handler: handler.updateActor
-    layers:
-      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
-    
+    handler: src/module/actor/updateActor.handler
+    events:
+      - http:
+          path: /update
+          method: post
+          cors: true
+
   deleteActor:
     description: delete actor
-    handler: handler.deleteActor
-    layers:
-      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
+    handler: src/module/actor/deleteActor.handler
+    events:
+      - http:
+          path: /delete
+          method: post
+          cors: true
 
   getMultiActor:
     description: get one or multiple actors
-    handler: handler.getMultiActor
-    layers:
-      - arn:aws:lambda:${self:provider.region}:135671754298:layer:lambda-layer-lib-${self:provider.stage}:latest
+    handler: src/module/actor/getMultiActor.handler
+    events:
+      - http:
+          path: /getMultiple
+          method: post
+          cors: true
