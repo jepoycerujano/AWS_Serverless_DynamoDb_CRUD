@@ -1,9 +1,10 @@
-const DDBTable = require('../../../lib/DDBTable/Dynamodb');
+const Dynamo = require('../../../lib/DynamoDB');
+const middyMiddleware = require('../../../lib/MiddleWare');
 
 const { WORKFLOW_ACTOR_TABLE } = process.env;
-const actorsTable = new DDBTable(WORKFLOW_ACTOR_TABLE);
+const actorsTable = new Dynamo(WORKFLOW_ACTOR_TABLE);
 
-exports.handler = (event, context, callback) => {
+exports.handler = Middy((event, context, callback) => {
   const { body } = event;
   const data = JSON.parse(body);
   console.log(data);
@@ -13,4 +14,4 @@ exports.handler = (event, context, callback) => {
     console.log(JSON.stringify(result));
     callback(null, JSON.stringify(result));
   });
-};
+});
