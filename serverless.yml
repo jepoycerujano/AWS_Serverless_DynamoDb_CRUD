@@ -80,41 +80,41 @@ functions:
     events:
       - http:
           path: /create
-          method: any
+          method: post
           cors: true
 
-  # getActor:
-  #   description: get actor
-  #   handler: src/module/actor/getActor.handler
-  #   events:
-  #     - http:
-  #         path: /get
-  #         method: post
-  #         cors: true
+  getActor:
+    description: get actor
+    handler: src/module/actor/getActor.handler
+    events:
+      - http:
+          path: /get
+          method: post
+          cors: true
 
-  # updateActor:
-  #   description: update actor
-  #   handler: src/module/actor/updateActor.handler
-  #   events:
-  #     - http:
-  #         path: /update
-  #         method: post
-  #         cors: true
+  updateActor:
+    description: update actor
+    handler: src/module/actor/updateActor.handler
+    events:
+      - http:
+          path: /update
+          method: post
+          cors: true
 
-  # deleteActor:
-  #   description: delete actor
-  #   handler: src/module/actor/deleteActor.handler
-  #   events:
-  #     - http:
-  #         path: /delete
-  #         method: post
-  #         cors: true
+  deleteActor:
+    description: delete actor
+    handler: src/module/actor/deleteActor.handler
+    events:
+      - http:
+          path: /delete
+          method: post
+          cors: true
 
-  # getMultiActor:
-  #   description: get one or multiple actors
-  #   handler: src/module/actor/getMultiActor.handler
-  #   events:
-  #     - http:
-  #         path: /getMultiple
-  #         method: post
-  #         cors: true
+  getMultiActor:
+    description: get one or multiple actors
+    handler: src/module/actor/getMultiActor.handler
+    events:
+      - http:
+          path: /getMultiple
+          method: post
+          cors: true
