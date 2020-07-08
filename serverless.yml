@@ -79,7 +79,7 @@ resources:
 
 functions:
 # CRUD for Workflow Actor 
-# Create, Read, Update and Delete function
+# Create, Read, Update, Scan and Delete function
   createActor:
     description: create actor
     handler: src/module/actor/createActor.handler
