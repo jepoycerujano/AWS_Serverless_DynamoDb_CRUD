@@ -30,6 +30,7 @@ package:
     - src/module/actor/getActor.js
     - src/module/actor/getMultiActor.js
     - src/module/actor/updateActor.js
+    - src/module/actor/scanActor.js
 
 provider:
   name: aws
@@ -41,6 +42,7 @@ provider:
   environment:
     DEPLOYMENT_STAGE: ${self:provider.stage} # staging environment dev, test or prod
     WORKFLOW_ACTOR_TABLE: workflow_actor-${self:provider.stage} # actors table service
+    AUTH0_DOMAIN: hzp41c93 # auth0 domain
     NODE_PATH: './:/opt/node_modules'
 
   iamRoleStatements:
@@ -53,6 +55,11 @@ provider:
         - dynamodb:UpdateItem
       Resource:
         - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:provider.environment.WORKFLOW_ACTOR_TABLE}
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource:
+        - arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-*
 
 resources:
   Resources:
@@ -72,7 +79,7 @@ resources:
 
 functions:
 # CRUD for Workflow Actor 
-# Create, Read, Update and Delete function
+# Create, Read, Update, Scan and Delete function
   createActor:
     description: create actor
     handler: src/module/actor/createActor.handler
@@ -82,6 +89,8 @@ functions:
       - http:
           path: /create
           method: post
+          authorizer: 
+            name: auth0
           cors: true
 
   getActor:
@@ -93,6 +102,8 @@ functions:
       - http:
           path: /get
           method: post
+          authorizer: 
+            name: auth0
           cors: true
 
   updateActor:
@@ -104,6 +115,8 @@ functions:
       - http:
           path: /update
           method: post
+          authorizer: 
+            name: auth0
           cors: true
 
   deleteActor:
@@ -115,6 +128,8 @@ functions:
       - http:
           path: /delete
           method: post
+          authorizer: 
+            name: auth0
           cors: true
 
   getMultiActor:
@@ -126,4 +141,25 @@ functions:
       - http:
           path: /getMultiple
           method: post
+          authorizer: 
+            name: auth0
           cors: true
+
+  scanActor:
+    description: scan table and filter source
+    handler: src/module/actor/scanActor.handler
+    layers:
+      - arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:layer:aws-serverles-layers-module-${self:provider.stage}:latest
+    events:
+      - http:
+          path: /scan
+          method: post
+          authorizer: 
+            name: auth0
+          cors: true
+
+  auth0:
+    description: user authorization
+    handler: src/module/auth0/auth.handler
+    layers:
+      - arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:layer:aws-serverles-layers-module-${self:provider.stage}:latest
