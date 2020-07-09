@@ -8,7 +8,7 @@ const actorsTable = new Dynamo(WORKFLOW_ACTOR_TABLE);
 
 exports.handler = middyMiddleware((data, context, callback) => {
   const { scopes } = data;
-  const { status, message } = scopeCheck(scopes, 'get:delete');
+  const { status, message } = scopeCheck(scopes, 'write:actor');
 
   if (status === 200) {
     actorsTable.deleteItem(data, (error, result) => {
