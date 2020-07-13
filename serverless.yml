@@ -43,6 +43,7 @@ provider:
     name: deploy.${self:provider.region}.nipahut.club # S3 bucket name
   environment:
     DEPLOYMENT_STAGE: ${self:provider.stage} # staging environment dev, test or prod
+    ALLOWED_ORIGINS: '*.nipahut.club'
     WORKFLOW_ACTOR_TABLE: workflow_actor-${self:provider.stage} # actors table service
     AUTH0_DOMAIN: hzp41c93 # auth0 domain
     NODE_PATH: './:/opt/node_modules'
@@ -79,15 +80,26 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    GatewayResponseDefault4XX:
-      Type: 'AWS::ApiGateway::GatewayResponse'
-      Properties:
-        ResponseParameters:
-          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-        ResponseType: DEFAULT_4XX
-        RestApiId:
-          Ref: 'ApiGatewayRestApi'
+    # GatewayResponse:
+    #   Type: 'AWS::ApiGateway::GatewayResponse'
+    #   Properties:
+    #     ResponseParameters:
+    #       gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+    #       gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+    #     ResponseType: EXPIRED_TOKEN
+    #     RestApiId:
+    #       Ref: 'ApiGatewayRestApi'
+    #     StatusCode: '401'
+    # AuthFailureGatewayResponse:
+    #   Type: 'AWS::ApiGateway::GatewayResponse'
+    #   Properties:
+    #     ResponseParameters:
+    #       gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+    #       gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+    #     ResponseType: UNAUTHORIZED
+    #     RestApiId:
+    #       Ref: 'ApiGatewayRestApi'
+    #     StatusCode: '401'
 
 functions:
 # CRUD for Workflow Actor 
@@ -103,16 +115,7 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors:
-            origin: '*' # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
+          cors: true
 
   getActor:
     description: get actor
@@ -125,16 +128,8 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors:
-            origin: '*' # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
+          cors: true
+
   updateActor:
     description: update actor
     handler: src/module/actor/updateActor.handler
@@ -146,16 +141,7 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors:
-            origin: '*' # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
+          cors: true
 
   deleteActor:
     description: delete actor
@@ -168,16 +154,7 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors:
-            origin: '*' # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
+          cors: true
 
   getMultiActor:
     description: get one or multiple actors
@@ -190,16 +167,7 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors:
-            origin: '*' # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
+          cors: true
 
   scanActor:
     description: scan table and filter source
@@ -212,16 +180,7 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors:
-            origin: '*' # <-- Specify allowed origin
-            headers: # <-- Specify allowed headers
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
+          cors: true
 
   auth0:
     description: user authorization
