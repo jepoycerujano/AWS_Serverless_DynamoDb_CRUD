@@ -6,7 +6,8 @@ const scopeCheck = require('../auth0/scopeCheck');
 const { WORKFLOW_ACTOR_TABLE } = process.env;
 const actorsTable = new Dynamo(WORKFLOW_ACTOR_TABLE);
 
-exports.handler = middyMiddleware((data, context, callback) => {
+exports.handler = middyMiddleware((event, context, callback) => {
+  const { body: data } = event;
   const { scopes } = data;
   const { status, message } = scopeCheck(scopes, 'get:actor');
 

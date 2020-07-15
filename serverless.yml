@@ -43,6 +43,7 @@ provider:
     name: deploy.${self:provider.region}.nipahut.club # S3 bucket name
   environment:
     DEPLOYMENT_STAGE: ${self:provider.stage} # staging environment dev, test or prod
+    ALLOWED_ORIGINS: '*.nipahut.club'
     WORKFLOW_ACTOR_TABLE: workflow_actor-${self:provider.stage} # actors table service
     AUTH0_DOMAIN: hzp41c93 # auth0 domain
     NODE_PATH: './:/opt/node_modules'
@@ -55,6 +56,7 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
         - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource:
         - arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/${self:provider.environment.WORKFLOW_ACTOR_TABLE}
     - Effect: Allow
@@ -78,7 +80,15 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'http://localhost:3000'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Authorization'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
 functions:
 # CRUD for Workflow Actor 
 # Create, Read, Update, Scan and Delete function
@@ -93,7 +103,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   getActor:
     description: get actor
@@ -106,8 +121,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
-
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
   updateActor:
     description: update actor
     handler: src/module/actor/updateActor.handler
@@ -119,7 +138,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true 
 
   deleteActor:
     description: delete actor
@@ -132,7 +156,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   getMultiActor:
     description: get one or multiple actors
@@ -145,7 +174,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   scanActor:
     description: scan table and filter source
@@ -158,7 +192,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   auth0:
     description: user authorization

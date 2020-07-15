@@ -35,5 +35,6 @@ exports.handler = async (event, context, callback) => {
 
   const policy = (!permissions) ? generatePolicy(sub, 'Deny', methodArn) : generatePolicy(sub, 'Allow', methodArn, permissions);
   Logger.silly(`===>>> policy ${JSON.stringify(policy)}`);
+
   callback(null, policy);
 };
