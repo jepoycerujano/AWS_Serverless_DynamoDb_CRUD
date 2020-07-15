@@ -80,27 +80,15 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    # GatewayResponse:
-    #   Type: 'AWS::ApiGateway::GatewayResponse'
-    #   Properties:
-    #     ResponseParameters:
-    #       gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-    #       gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-    #     ResponseType: EXPIRED_TOKEN
-    #     RestApiId:
-    #       Ref: 'ApiGatewayRestApi'
-    #     StatusCode: '401'
-    # AuthFailureGatewayResponse:
-    #   Type: 'AWS::ApiGateway::GatewayResponse'
-    #   Properties:
-    #     ResponseParameters:
-    #       gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
-    #       gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
-    #     ResponseType: UNAUTHORIZED
-    #     RestApiId:
-    #       Ref: 'ApiGatewayRestApi'
-    #     StatusCode: '401'
-
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'http://localhost:3000'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'Authorization'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
 functions:
 # CRUD for Workflow Actor 
 # Create, Read, Update, Scan and Delete function
@@ -115,7 +103,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   getActor:
     description: get actor
@@ -128,8 +121,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
-
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
   updateActor:
     description: update actor
     handler: src/module/actor/updateActor.handler
@@ -141,7 +138,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true 
 
   deleteActor:
     description: delete actor
@@ -154,7 +156,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   getMultiActor:
     description: get one or multiple actors
@@ -167,7 +174,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   scanActor:
     description: scan table and filter source
@@ -180,7 +192,12 @@ functions:
           method: post
           authorizer: 
             name: auth0
-          cors: true
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
 
   auth0:
     description: user authorization
