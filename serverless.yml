@@ -33,6 +33,7 @@ package:
     - src/module/actor/getMultiActor.js
     - src/module/actor/updateActor.js
     - src/module/actor/scanActor.js
+    - src/module/authorizer/index.js
 
 provider:
   name: aws
@@ -204,3 +205,21 @@ functions:
     handler: src/module/auth0/auth.handler
     layers:
       - arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:layer:aws-serverles-layers-module-${self:provider.stage}:latest
+
+  authorizer:
+    description: check authorization of user
+    handler: src/module/authorizer/index.handler
+    layers:
+      - arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:layer:aws-serverles-layers-module-${self:provider.stage}:latest
+    events:
+      - http:
+          path: /authorizer
+          method: post
+          authorizer: 
+            name: auth0
+          cors:
+            origin: 'http://localhost:3000'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
