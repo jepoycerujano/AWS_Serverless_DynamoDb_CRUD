@@ -45,7 +45,7 @@
     "eslint-plugin-import": "^2.20.1",
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-latest-layer-version": "^2.1.0",
-    "serverless-offline": "^6.1.0",
+    "serverless-offline": "^12.0.4",
     "serverless-pseudo-parameters": "^2.5.0"
   }
 }
